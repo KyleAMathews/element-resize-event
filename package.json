@@ -1,0 +1,23 @@
+{
+  "name": "element-resize-event",
+  "version": "1.0.0",
+  "description": "Polyfill to make it easy to listen for element resize events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KyleAMathews/element-resize-event.git"
+  },
+  "keywords": [
+    "resize",
+    "event"
+  ],
+  "author": "Marc J. Schmidt <marc@jarves.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KyleAMathews/element-resize-event/issues"
+  },
+  "homepage": "https://github.com/KyleAMathews/element-resize-event"
+}
