@@ -1,6 +1,6 @@
 {
   "name": "element-resize-event",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Polyfill to make it easy to listen for element resize events",
   "main": "index.js",
   "scripts": {
