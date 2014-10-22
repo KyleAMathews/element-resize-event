@@ -73,7 +73,10 @@ module.exports = function(element, callback) {
     '</div>';
     element.appendChild(element.resizeSensor);
 
-    if ('absolute' !== getComputedStyle(element, 'position')) {
+    if (!{
+        fixed: 1,
+        absolute: 1
+      }[getComputedStyle(element, 'position')]) {
       element.style.position = 'relative';
     }
 
