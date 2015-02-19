@@ -1,26 +1,26 @@
 {
   "name": "element-resize-event",
-  "version": "2.0.0",
   "description": "Polyfill to make it easy to listen for element resize events",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "2.0.0",
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/KyleAMathews/element-resize-event/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/KyleAMathews/element-resize-event.git"
+  "devDependencies": {
+    "browserify": "^8.1.3"
   },
+  "homepage": "https://github.com/KyleAMathews/element-resize-event",
   "keywords": [
     "resize",
     "event"
   ],
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/KyleAMathews/element-resize-event/issues"
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KyleAMathews/element-resize-event.git"
   },
-  "homepage": "https://github.com/KyleAMathews/element-resize-event",
-  "devDependencies": {
-    "browserify": "^8.1.3"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
