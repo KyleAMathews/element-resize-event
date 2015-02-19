@@ -14,7 +14,7 @@
     "resize",
     "event"
   ],
-  "author": "Marc J. Schmidt <marc@jarves.io>",
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/KyleAMathews/element-resize-event/issues"
