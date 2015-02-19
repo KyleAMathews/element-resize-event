@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/KyleAMathews/element-resize-event/issues"
   },
-  "homepage": "https://github.com/KyleAMathews/element-resize-event"
+  "homepage": "https://github.com/KyleAMathews/element-resize-event",
+  "devDependencies": {
+    "browserify": "^8.1.3"
+  }
 }
