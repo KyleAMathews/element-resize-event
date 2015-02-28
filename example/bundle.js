@@ -1,21 +1,59 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var el = document.querySelectorAll('.CONTAINER')[0];
+interact(el)
+  .resizable(true)
+  .on('resizemove', function (event) {
+    var target = event.target;
+
+    // add the change in coords to the previous width of the target element
+    var
+        newWidth  = parseFloat(target.style.width ) + event.dx,
+        newHeight = parseFloat(target.style.height) + event.dy;
+
+    // update the element's style
+    target.style.width      = newWidth + 'px';
+    target.style.height     = newHeight + 'px';
+
+  });
+
+
 elementResizeEvent = require('../index.js');
 
 element = document.getElementById("resize");
-window.p = p = document.getElementById("width");
-console.log(p);
-console.log(elementResizeEvent);
-console.log(elementResizeEvent(element, function() {
+window.w = w = document.getElementById("width");
+window.h = h = document.getElementById("height");
+console.log(elementResizeEvent(element, function(size) {
   console.log("resized!");
-  console.log(element.offsetWidth);
-  console.log(p);
-  console.log(element.offsetWidth + "px wide");
-  p.innerHTML = element.offsetWidth + "px wide";
+  w.innerHTML = element.offsetWidth + "px wide";
+  h.innerHTML = element.offsetHeight + "px high";
+  console.log(size);
+  console.log('====================');
+  var newClass = 'Box';
+  if (size.width < 300) {
+    newClass += '  Box--SIZE_small';
+  } else {
+    newClass += '  Box--SIZE_normal';
+  }
+  if (size.height > 100) {
+    newClass += '  Box--SIZE_thin';
+  } else {
+    newClass += '  Box--SIZE_thick';
+  }
+  element.setAttribute('class', newClass);
 }));
 
 },{"../index.js":2}],2:[function(require,module,exports){
+if (typeof document === "undefined") {
+  document = {};
+}
+if (typeof window === "undefined") {
+  window = {};
+}
+
 var attachEvent = document.attachEvent;
-var isIE = navigator.userAgent.match(/Trident/);
+if (typeof navigator !== "undefined") {
+  var isIE = navigator.userAgent.match(/Trident/);
+}
 
 var requestFrame = (function() {
   var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn) {
@@ -42,7 +80,10 @@ function resizeListener(e) {
   win.__resizeRAF__ = requestFrame(function() {
     var trigger = win.__resizeTrigger__;
     trigger.__resizeListeners__.forEach(function(fn) {
-      fn.call(trigger, e);
+      fn.call(trigger, /*e,*/ {
+        width: trigger.offsetWidth,
+        height: trigger.offsetHeight
+      });
     });
   });
 }

@@ -1,5 +1,14 @@
+if (typeof document === "undefined") {
+  document = {};
+}
+if (typeof window === "undefined") {
+  window = {};
+}
+
 var attachEvent = document.attachEvent;
-var isIE = navigator.userAgent.match(/Trident/);
+if (typeof navigator !== "undefined") {
+  var isIE = navigator.userAgent.match(/Trident/);
+}
 
 var requestFrame = (function() {
   var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn) {
@@ -26,7 +35,10 @@ function resizeListener(e) {
   win.__resizeRAF__ = requestFrame(function() {
     var trigger = win.__resizeTrigger__;
     trigger.__resizeListeners__.forEach(function(fn) {
-      fn.call(trigger, e);
+      fn.call(trigger, /*e,*/ {
+        width: trigger.offsetWidth,
+        height: trigger.offsetHeight
+      });
     });
   });
 }

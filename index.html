@@ -5,12 +5,70 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Example</title>
         <meta name="description" content="">
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
     </head>
     <body>
+        Proportions of inner box
         <p id="width">100px wide</p>
-        <p style="resize:both;width:100px;overflow:scroll;border:1px solid black;" id="resize">You can resize me!</p>
+        <p id="height">50px high</p>
 
+
+        <br>
+
+        <style>
+          html {
+            box-sizing: border-box;
+          }
+          *, *:before, *:after {
+            box-sizing: inherit;
+          }
+          .CONTAINER         {
+            background-color : #9cf;
+            border-radius    : 8px;
+            box-sizing       : border-box;
+            border           : 2px dotted #333;
+            padding          : 20px;
+            margin           : 20px;
+            overflow         : hidden;
+          }
+          .Box               {
+            /*display          : flex;*/
+            max-width        : 600px;
+            max-height       : 200px;
+            border           : 1px solid black;
+          }
+          .Box--SIZE_normal  {
+            background-color : green;
+          }
+          .Box--SIZE_small   {
+            background-color : purple;
+          }
+          .Box--SIZE_thin    {
+            border           : 1px solid black;
+          }
+          .Box--SIZE_thick   {
+            border           : 5px solid black;
+          }
+        </style>
+        <div class="CONTAINER" style="font-size: 20px; width: 800px; height: 500px;">
+
+          Type in element to change size or drag width/height of blue container.
+          <br>
+          <p contenteditable id="resize" class="Box">
+            This editable element is:<br>
+            parent size responsive
+          </p>
+
+        </div>
+        <b><u>TODO:</u></b><br>
+        <ul>
+          <li> test all possible resize scenarios across all possible browsers & devices </li>
+          <li> optimize performance and compare to non-element-query performance </li>
+        </ul>
+        <!-- To be able to resize the '.resize' element -->
+        <script src="example/interact.js"></script>
         <script src="example/bundle.js"></script>
     </body>
 </html>
