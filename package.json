@@ -11,8 +11,10 @@
   },
   "homepage": "https://github.com/KyleAMathews/element-resize-event",
   "keywords": [
+    "event",
     "resize",
-    "event"
+    "element-query",
+    "element queries"
   ],
   "license": "MIT",
   "main": "index.js",
