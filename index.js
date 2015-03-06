@@ -1,8 +1,8 @@
 if (typeof document === "undefined") {
-  document = {};
+  var document = {};
 }
 if (typeof window === "undefined") {
-  window = {};
+  var window = {};
 }
 
 var attachEvent = document.attachEvent;
