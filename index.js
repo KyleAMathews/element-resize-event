@@ -1,51 +1,47 @@
-if (typeof document === "undefined") {
-  var document = {};
-}
-if (typeof window === "undefined") {
-  var window = {};
-}
-
-var attachEvent = document.attachEvent;
-if (typeof navigator !== "undefined") {
-  var isIE = navigator.userAgent.match(/Trident/);
-}
-
-var requestFrame = (function() {
-  var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn) {
-      return window.setTimeout(fn, 20);
-    };
-  return function(fn) {
-    return raf(fn);
-  };
-})();
-
-var cancelFrame = (function() {
-  var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
-    window.clearTimeout;
-  return function(id) {
-    return cancel(id);
-  };
-})();
-
-function resizeListener(e) {
-  var win = e.target || e.srcElement;
-  if (win.__resizeRAF__) {
-    cancelFrame(win.__resizeRAF__);
-  }
-  win.__resizeRAF__ = requestFrame(function() {
-    var trigger = win.__resizeTrigger__;
-    trigger.__resizeListeners__.forEach(function(fn) {
-      fn.call(trigger, e);
-    });
-  });
-}
-
-function objectLoad(e) {
-  this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
-  this.contentDocument.defaultView.addEventListener('resize', resizeListener);
-}
-
 module.exports = function(element, fn) {
+  var window = this;
+  var document = window.document;
+
+  var attachEvent = document.attachEvent;
+  if (typeof navigator !== "undefined") {
+    var isIE = navigator.userAgent.match(/Trident/);
+  }
+
+  var requestFrame = (function() {
+    var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn) {
+        return window.setTimeout(fn, 20);
+      };
+    return function(fn) {
+      return raf(fn);
+    };
+  })();
+
+  var cancelFrame = (function() {
+    var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
+      window.clearTimeout;
+    return function(id) {
+      return cancel(id);
+    };
+  })();
+
+  function resizeListener(e) {
+    var win = e.target || e.srcElement;
+    if (win.__resizeRAF__) {
+      cancelFrame(win.__resizeRAF__);
+    }
+    win.__resizeRAF__ = requestFrame(function() {
+      var trigger = win.__resizeTrigger__;
+      trigger.__resizeListeners__.forEach(function(fn) {
+        fn.call(trigger, e);
+      });
+    });
+  }
+
+  function objectLoad(e) {
+    this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
+    this.contentDocument.defaultView.addEventListener('resize', resizeListener);
+  }
+
   if (!element.__resizeListeners__) {
     element.__resizeListeners__ = [];
     if (attachEvent) {
