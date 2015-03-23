@@ -1,7 +1,7 @@
 element-resize-event
 ==================
 
-Polyfill to make it easy to listen for element resize events
+Library to make it easy to listen for element resize events
 
 Code borrowed from a [blog post by
 backalleycoder.com](http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/).
