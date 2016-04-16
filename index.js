@@ -4,7 +4,7 @@ module.exports = function(element, fn) {
 
   var attachEvent = document.attachEvent;
   if (typeof navigator !== "undefined") {
-    var isIE = navigator.userAgent.match(/Trident/);
+    var isIE = navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/Edge/);
   }
 
   var requestFrame = (function() {
