@@ -1,4 +1,4 @@
-module.exports = function(element, fn) {
+var exports = function(element, fn) {
   var window = this;
   var document = window.document;
 
@@ -68,3 +68,5 @@ module.exports = function(element, fn) {
   }
   element.__resizeListeners__.push(fn);
 };
+
+module.exports = (typeof window === "undefined") ? exports : exports.bind(window);
