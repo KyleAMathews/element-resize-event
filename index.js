@@ -78,4 +78,17 @@ var exports = function exports(element, fn) {
   element.__resizeListeners__.push(fn)
 }
 
+exports.unbind = function(element, fn){
+  var attachEvent = document.attachEvent;
+  element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
+  if (!element.__resizeListeners__.length) {
+    if (attachEvent) {
+      element.detachEvent('onresize', resizeListener);
+    } else {
+      element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener);
+      element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
+    }
+  }
+}
+
 module.exports = (typeof window === 'undefined') ? exports : exports.bind(window)
