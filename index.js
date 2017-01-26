@@ -89,7 +89,9 @@ module.exports.unbind = function(element, fn){
       element.detachEvent('onresize', resizeListener)
     } else {
       element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener)
+      delete element.__resizeTrigger__.contentDocument.defaultView.__resizeTrigger__
       element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__)
     }
+    delete element.__resizeListeners__
   }
 }
