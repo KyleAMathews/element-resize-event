@@ -31,6 +31,5 @@ _elementResizeEvent.addResizeListener(element, resizeHandler);
 
 //To detach the listener
 _elementResizeEvent.removeResizeListener(element, resizeHandler);
-});
 
 ```
