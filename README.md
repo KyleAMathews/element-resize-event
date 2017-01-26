@@ -11,12 +11,26 @@ backalleycoder.com](http://www.backalleycoder.com/2013/03/18/cross-browser-event
 
 ## Usage
 ```javascript
-var elementResizeEvent = require('element-resize-event');
+
+elementResizeEvent = require('element-resize-event');
+var _elementResizeEvent = new elementResizeEvent.elementResizeEvent(window);
+
+//Or using ES6 syntax 
+//import {elementResizeEvent} from "element-resize-event";
+//var _elementResizeEvent = new elementResizeEvent(window);
 
 var element = document.getElementById("resize");
 
-elementResizeEvent(element, function() {
+var resizeHandler = function() {
   console.log("resized!");
   console.log(element.offsetWidth);
+}
+
+//To attach a listener
+_elementResizeEvent.addResizeListener(element, resizeHandler);
+
+//To detach the listener
+_elementResizeEvent.removeResizeListener(element, resizeHandler);
 });
+
 ```
