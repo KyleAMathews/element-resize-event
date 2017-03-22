@@ -1,4 +1,5 @@
 var requestFrame = (function () {
+  var window = this
   var raf = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
@@ -11,6 +12,7 @@ var requestFrame = (function () {
 })()
 
 var cancelFrame = (function () {
+  var window = this
   var cancel = window.cancelAnimationFrame ||
     window.mozCancelAnimationFrame ||
     window.webkitCancelAnimationFrame ||
