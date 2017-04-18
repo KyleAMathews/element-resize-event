@@ -20,3 +20,10 @@ elementResizeEvent(element, function() {
   console.log(element.offsetWidth);
 });
 ```
+
+### Unbinding The Event Listener
+```javascript
+var unbind = require('element-resize-event').unbind;
+
+unbind(element);
+```
