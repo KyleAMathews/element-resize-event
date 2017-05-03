@@ -58,7 +58,7 @@ var exports = function exports(element, fn) {
       element.attachEvent('onresize', resizeListener)
     } else {
       if (getComputedStyle(element).position === 'static') {
-        element.style.position = 'relative'
+        element.style.setProperty('position', 'relative', 'important')
       }
       var obj = (element.__resizeTrigger__ = document.createElement('object'))
       obj.setAttribute(
