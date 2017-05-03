@@ -63,7 +63,7 @@ var exports = function exports(element, fn) {
       var obj = (element.__resizeTrigger__ = document.createElement('object'))
       obj.setAttribute(
         'style',
-        'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1; opacity: 0;'
+        'display: block !important; position: absolute !important; top: 0 !important; left: 0 !important; height: 100% !important; width: 100% !important; overflow: hidden !important; pointer-events: none !important; z-index: -1 !important; opacity: 0 !important;'
       )
       obj.setAttribute('class', 'resize-sensor')
       obj.__resizeElement__ = element
