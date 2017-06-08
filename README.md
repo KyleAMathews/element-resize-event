@@ -9,6 +9,9 @@ backalleycoder.com](http://www.backalleycoder.com/2013/03/18/cross-browser-event
 ## Install
 `npm install element-resize-event`
 
+## Dependencies
+This library depends on the availability of `requestAnimationFrame` and `cancelAnimationFrame`
+
 ## Usage
 ```javascript
 var elementResizeEvent = require('element-resize-event');
