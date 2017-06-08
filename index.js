@@ -1,33 +1,9 @@
-var requestFrame = (function () {
-  var window = this
-  var raf = window.requestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    function fallbackRAF(func) {
-      return window.setTimeout(func, 20)
-    }
-  return function requestFrameFunction(func) {
-    return raf(func)
-  }
-})()
-
-var cancelFrame = (function () {
-  var window = this
-  var cancel = window.cancelAnimationFrame ||
-    window.mozCancelAnimationFrame ||
-    window.webkitCancelAnimationFrame ||
-    window.clearTimeout
-  return function cancelFrameFunction(id) {
-    return cancel(id)
-  }
-})()
-
 function resizeListener(e) {
   var win = e.target || e.srcElement
   if (win.__resizeRAF__) {
-    cancelFrame(win.__resizeRAF__)
+    cancelAnimationFrame(win.__resizeRAF__)
   }
-  win.__resizeRAF__ = requestFrame(function () {
+  win.__resizeRAF__ = requestAnimationFrame(function () {
     var trigger = win.__resizeTrigger__
     trigger.__resizeListeners__.forEach(function (fn) {
       fn.call(trigger, e)
