@@ -5,59 +5,78 @@ element = document.getElementById("resize");
 window.p = p = document.getElementById("width");
 console.log(p);
 console.log(elementResizeEvent);
-console.log(elementResizeEvent(element, function() {
+
+function onResize() {
   console.log("resized!");
   console.log(element.offsetWidth);
   console.log(p);
   console.log(element.offsetWidth + "px wide");
   p.innerHTML = element.offsetWidth + "px wide";
-}));
+}
 
+//check unbind when nothing is bound
+elementResizeEvent.unbind(element);
+elementResizeEvent.unbind(element, onResize);
+
+elementResizeEvent(element, onResize);
+//check unbind for bounded function
+elementResizeEvent.unbind(element, onResize);
+
+//bind again
+console.log(elementResizeEvent(element, onResize));
+
+//check unbind of non-existent function
+elementResizeEvent.unbind(element, function() {})
 },{"../index.js":2}],2:[function(require,module,exports){
+var requestFrame = (function () {
+  var window = this
+  var raf = window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    function fallbackRAF(func) {
+      return window.setTimeout(func, 20)
+    }
+  return function requestFrameFunction(func) {
+    return raf(func)
+  }
+})()
+
+var cancelFrame = (function () {
+  var window = this
+  var cancel = window.cancelAnimationFrame ||
+    window.mozCancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    window.clearTimeout
+  return function cancelFrameFunction(id) {
+    return cancel(id)
+  }
+})()
+
+function resizeListener(e) {
+  var win = e.target || e.srcElement
+  if (win.__resizeRAF__) {
+    cancelFrame(win.__resizeRAF__)
+  }
+  win.__resizeRAF__ = requestFrame(function () {
+    var trigger = win.__resizeTrigger__
+    var listeners = trigger &&  trigger.__resizeListeners__
+    if (listeners) {
+      listeners.forEach(function (fn) {
+        fn.call(trigger, e)
+      })
+    }
+  })
+}
+
 var exports = function exports(element, fn) {
   var window = this
   var document = window.document
   var isIE
-  var requestFrame
 
   var attachEvent = document.attachEvent
   if (typeof navigator !== 'undefined') {
-    isIE = navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/Edge/)
-  }
-
-  requestFrame = (function () {
-    var raf = window.requestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-          function fallbackRAF(func) {
-            return window.setTimeout(func, 20)
-          }
-    return function requestFrameFunction(func) {
-      return raf(func)
-    }
-  })()
-
-  var cancelFrame = (function () {
-    var cancel = window.cancelAnimationFrame ||
-      window.mozCancelAnimationFrame ||
-        window.webkitCancelAnimationFrame ||
-          window.clearTimeout
-    return function cancelFrameFunction(id) {
-      return cancel(id)
-    }
-  })()
-
-  function resizeListener(e) {
-    var win = e.target || e.srcElement
-    if (win.__resizeRAF__) {
-      cancelFrame(win.__resizeRAF__)
-    }
-    win.__resizeRAF__ = requestFrame(function () {
-      var trigger = win.__resizeTrigger__
-      trigger.__resizeListeners__.forEach(function (fn) {
-        fn.call(trigger, e)
-      })
-    })
+    isIE = navigator.userAgent.match(/Trident/) ||
+      navigator.userAgent.match(/Edge/)
   }
 
   function objectLoad() {
@@ -74,8 +93,11 @@ var exports = function exports(element, fn) {
       if (getComputedStyle(element).position === 'static') {
         element.style.position = 'relative'
       }
-      var obj = element.__resizeTrigger__ = document.createElement('object')
-      obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;')
+      var obj = (element.__resizeTrigger__ = document.createElement('object'))
+      obj.setAttribute(
+        'style',
+        'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1; opacity: 0;'
+      )
       obj.setAttribute('class', 'resize-sensor')
       obj.__resizeElement__ = element
       obj.onload = objectLoad
@@ -92,22 +114,33 @@ var exports = function exports(element, fn) {
   element.__resizeListeners__.push(fn)
 }
 
-module.exports = (typeof window === 'undefined') ? exports : exports.bind(window)
+module.exports = typeof window === 'undefined' ? exports : exports.bind(window)
 
-module.exports.unbind = function(element, fn){
+module.exports.unbind = function (element, fn) {
   var attachEvent = document.attachEvent
+  var listeners = element.__resizeListeners__ || []
   if (fn) {
-    element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1)
+    var index = listeners.indexOf(fn)
+    if (index !== -1) {
+      listeners.splice(index, 1)
+    }
   } else {
-    element.__resizeListeners__ = []
+    listeners = element.__resizeListeners__ = []
   }
-  if (!element.__resizeListeners__.length) {
+  if (!listeners.length) {
     if (attachEvent) {
       element.detachEvent('onresize', resizeListener)
-    } else {
-      element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener)
-      element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__)
+    } else if (element.__resizeTrigger__) {
+      element.__resizeTrigger__.contentDocument.defaultView.removeEventListener(
+        'resize',
+        resizeListener
+      )
+      delete element.__resizeTrigger__.contentDocument.defaultView.__resizeTrigger__
+      element.__resizeTrigger__ = !element.removeChild(
+        element.__resizeTrigger__
+      )
     }
+    delete element.__resizeListeners__
   }
 }
 
