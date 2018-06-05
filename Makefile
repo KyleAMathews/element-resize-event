@@ -12,6 +12,9 @@ release-major:
 build:
 	@$(bin)browserify example/index.js -o example/bundle.js
 
+build-windows:
+	cmd /c ".\node_modules\.bin\browserify example\index.js -o example\bundle.js"
+
 publish:
 	git push --tags origin HEAD:master
 	npm publish
