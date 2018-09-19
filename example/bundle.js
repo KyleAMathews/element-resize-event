@@ -28,36 +28,12 @@ console.log(elementResizeEvent(element, onResize));
 //check unbind of non-existent function
 elementResizeEvent.unbind(element, function() {})
 },{"../index.js":2}],2:[function(require,module,exports){
-var requestFrame = (function () {
-  var window = this
-  var raf = window.requestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    function fallbackRAF(func) {
-      return window.setTimeout(func, 20)
-    }
-  return function requestFrameFunction(func) {
-    return raf(func)
-  }
-})()
-
-var cancelFrame = (function () {
-  var window = this
-  var cancel = window.cancelAnimationFrame ||
-    window.mozCancelAnimationFrame ||
-    window.webkitCancelAnimationFrame ||
-    window.clearTimeout
-  return function cancelFrameFunction(id) {
-    return cancel(id)
-  }
-})()
-
 function resizeListener(e) {
   var win = e.target || e.srcElement
   if (win.__resizeRAF__) {
-    cancelFrame(win.__resizeRAF__)
+    cancelAnimationFrame(win.__resizeRAF__)
   }
-  win.__resizeRAF__ = requestFrame(function () {
+  win.__resizeRAF__ = requestAnimationFrame(function () {
     var trigger = win.__resizeTrigger__
     var listeners = trigger &&  trigger.__resizeListeners__
     if (listeners) {
@@ -131,11 +107,12 @@ module.exports.unbind = function (element, fn) {
     if (attachEvent) {
       element.detachEvent('onresize', resizeListener)
     } else if (element.__resizeTrigger__) {
-      element.__resizeTrigger__.contentDocument.defaultView.removeEventListener(
-        'resize',
-        resizeListener
-      )
-      delete element.__resizeTrigger__.contentDocument.defaultView.__resizeTrigger__
+      var contentDocument = element.__resizeTrigger__.contentDocument;
+      var defaultView = contentDocument && contentDocument.defaultView;
+      if (defaultView) {
+        defaultView.removeEventListener('resize', resizeListener);
+        delete defaultView.__resizeTrigger__;
+      }
       element.__resizeTrigger__ = !element.removeChild(
         element.__resizeTrigger__
       )
