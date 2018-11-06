@@ -75,6 +75,10 @@ var exports = function exports(element, fn) {
         'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1; opacity: 0;'
       )
       obj.setAttribute('class', 'resize-sensor')
+
+      // prevent <object> from stealing keyboard focus
+      obj.setAttribute('tabindex', '-1');
+
       obj.__resizeElement__ = element
       obj.onload = objectLoad
       obj.type = 'text/html'
