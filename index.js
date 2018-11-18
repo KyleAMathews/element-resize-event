@@ -49,6 +49,9 @@ var exports = function exports(element, fn) {
       // prevent <object> from stealing keyboard focus
       obj.setAttribute('tabindex', '-1');
 
+      // prevent screenreaders to see this object
+      obj.setAttribute('title', '');
+
       obj.__resizeElement__ = element
       obj.onload = objectLoad
       obj.type = 'text/html'
