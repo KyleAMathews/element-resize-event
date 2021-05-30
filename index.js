@@ -14,7 +14,7 @@ function resizeListener(e) {
   })
 }
 
-var exports = function exports(element, fn) {
+var _exports = function exports(element, fn) {
   var window = this
   var document = window.document
   var isIE
@@ -67,7 +67,7 @@ var exports = function exports(element, fn) {
   element.__resizeListeners__.push(fn)
 }
 
-module.exports = typeof window === 'undefined' ? exports : exports.bind(window)
+module.exports = typeof window === 'undefined' ? _exports : _exports.bind(window)
 
 module.exports.unbind = function (element, fn) {
   var attachEvent = document.attachEvent
