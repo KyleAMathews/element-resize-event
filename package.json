@@ -10,22 +10,31 @@
     "browserify": "^8.1.3",
     "eslint": "^2.10.2",
     "eslint-config-airbnb-base": "^3.0.1",
-    "eslint-plugin-import": "^1.8.0"
+    "eslint-plugin-import": "^1.8.0",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "prettier": "^2.3.0"
   },
   "homepage": "https://github.com/KyleAMathews/element-resize-event",
   "keywords": [
-    "event",
-    "resize",
+    "element queries",
     "element-query",
-    "element queries"
+    "event",
+    "resize"
   ],
   "license": "MIT",
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
+  },
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/KyleAMathews/element-resize-event.git"
   },
   "scripts": {
+    "prepare": "husky install",
+    "prettier": "prettier --write \"**/*.{md,css,scss,yaml,yml,js}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

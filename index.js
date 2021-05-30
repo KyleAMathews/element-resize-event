@@ -5,7 +5,7 @@ function resizeListener(e) {
   }
   win.__resizeRAF__ = requestAnimationFrame(function () {
     var trigger = win.__resizeTrigger__
-    var listeners = trigger &&  trigger.__resizeListeners__
+    var listeners = trigger && trigger.__resizeListeners__
     if (listeners) {
       listeners.forEach(function (fn) {
         fn.call(trigger, e)
@@ -20,45 +20,45 @@ var _exports = function exports(element, fn) {
   var isIE
 
   var attachEvent = document.attachEvent
-  if (typeof navigator !== 'undefined') {
-    isIE = navigator.userAgent.match(/Trident/) ||
-      navigator.userAgent.match(/Edge/)
+  if (typeof navigator !== "undefined") {
+    isIE =
+      navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/Edge/)
   }
 
   function objectLoad() {
     this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__
-    this.contentDocument.defaultView.addEventListener('resize', resizeListener)
+    this.contentDocument.defaultView.addEventListener("resize", resizeListener)
   }
 
   if (!element.__resizeListeners__) {
     element.__resizeListeners__ = []
     if (attachEvent) {
       element.__resizeTrigger__ = element
-      element.attachEvent('onresize', resizeListener)
+      element.attachEvent("onresize", resizeListener)
     } else {
-      if (getComputedStyle(element).position === 'static') {
-        element.style.position = 'relative'
+      if (getComputedStyle(element).position === "static") {
+        element.style.position = "relative"
       }
-      var obj = (element.__resizeTrigger__ = document.createElement('object'))
+      var obj = (element.__resizeTrigger__ = document.createElement("object"))
       obj.setAttribute(
-        'style',
-        'position: absolute; top: 0; left: 0; height: 100%; width: 100%; pointer-events: none; z-index: -1; opacity: 0;'
+        "style",
+        "position: absolute; top: 0; left: 0; height: 100%; width: 100%; pointer-events: none; z-index: -1; opacity: 0;"
       )
-      obj.setAttribute('class', 'resize-sensor')
+      obj.setAttribute("class", "resize-sensor")
 
       // prevent <object> from stealing keyboard focus
-      obj.setAttribute('tabindex', '-1');
+      obj.setAttribute("tabindex", "-1")
 
       // prevent screenreaders to see this object
-      obj.setAttribute('title', '');
+      obj.setAttribute("title", "")
 
       obj.__resizeElement__ = element
       obj.onload = objectLoad
-      obj.type = 'text/html'
+      obj.type = "text/html"
       if (isIE) {
         element.appendChild(obj)
       }
-      obj.data = 'about:blank'
+      obj.data = "about:blank"
       if (!isIE) {
         element.appendChild(obj)
       }
@@ -67,7 +67,8 @@ var _exports = function exports(element, fn) {
   element.__resizeListeners__.push(fn)
 }
 
-module.exports = typeof window === 'undefined' ? _exports : _exports.bind(window)
+module.exports =
+  typeof window === "undefined" ? _exports : _exports.bind(window)
 
 module.exports.unbind = function (element, fn) {
   var attachEvent = document.attachEvent
@@ -82,13 +83,13 @@ module.exports.unbind = function (element, fn) {
   }
   if (!listeners.length) {
     if (attachEvent) {
-      element.detachEvent('onresize', resizeListener)
+      element.detachEvent("onresize", resizeListener)
     } else if (element.__resizeTrigger__) {
-      var contentDocument = element.__resizeTrigger__.contentDocument;
-      var defaultView = contentDocument && contentDocument.defaultView;
+      var contentDocument = element.__resizeTrigger__.contentDocument
+      var defaultView = contentDocument && contentDocument.defaultView
       if (defaultView) {
-        defaultView.removeEventListener('resize', resizeListener);
-        delete defaultView.__resizeTrigger__;
+        defaultView.removeEventListener("resize", resizeListener)
+        delete defaultView.__resizeTrigger__
       }
       element.__resizeTrigger__ = !element.removeChild(
         element.__resizeTrigger__
