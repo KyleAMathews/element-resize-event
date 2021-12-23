@@ -14,7 +14,7 @@ function resizeListener(e) {
   })
 }
 
-var _exports = function exports(element, fn) {
+var _exports = function(element, fn) {
   var window = this
   var document = window.document
   var isIE
