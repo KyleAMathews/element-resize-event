@@ -1,180 +1,149 @@
-;(function e(t, n, r) {
-  function s(o, u) {
-    if (!n[o]) {
-      if (!t[o]) {
-        var a = typeof require == "function" && require
-        if (!u && a) return a(o, !0)
-        if (i) return i(o, !0)
-        var f = new Error("Cannot find module '" + o + "'")
-        throw ((f.code = "MODULE_NOT_FOUND"), f)
-      }
-      var l = (n[o] = { exports: {} })
-      t[o][0].call(
-        l.exports,
-        function (e) {
-          var n = t[o][1][e]
-          return s(n ? n : e)
-        },
-        l,
-        l.exports,
-        e,
-        t,
-        n,
-        r
-      )
+"use strict";
+(() => {
+  var __create = Object.create;
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __commonJS = (cb, mod) => function __require() {
+    try {
+      return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    } catch (e) {
+      throw mod = 0, e;
     }
-    return n[o].exports
-  }
-  var i = typeof require == "function" && require
-  for (var o = 0; o < r.length; o++) s(r[o])
-  return s
-})(
-  {
-    1: [
-      function (require, module, exports) {
-        elementResizeEvent = require("../index.js")
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
+  ));
 
-        element = document.getElementById("resize")
-        window.p = p = document.getElementById("width")
-        console.log(p)
-        console.log(elementResizeEvent)
-
-        function onResize() {
-          console.log("resized!")
-          console.log(element.offsetWidth)
-          console.log(p)
-          console.log(element.offsetWidth + "px wide")
-          p.innerHTML = element.offsetWidth + "px wide"
+  // src/index.ts
+  var require_src = __commonJS({
+    "src/index.ts"(exports, module) {
+      "use strict";
+      function resizeListener(e) {
+        const win = e.target || e.srcElement;
+        if (win.__resizeRAF__) {
+          cancelAnimationFrame(win.__resizeRAF__);
         }
-
-        //check unbind when nothing is bound
-        elementResizeEvent.unbind(element)
-        elementResizeEvent.unbind(element, onResize)
-
-        elementResizeEvent(element, onResize)
-        //check unbind for bounded function
-        elementResizeEvent.unbind(element, onResize)
-
-        //bind again
-        console.log(elementResizeEvent(element, onResize))
-
-        //check unbind of non-existent function
-        elementResizeEvent.unbind(element, function () {})
-      },
-      { "../index.js": 2 },
-    ],
-    2: [
-      function (require, module, exports) {
-        function resizeListener(e) {
-          var win = e.target || e.srcElement
-          if (win.__resizeRAF__) {
-            cancelAnimationFrame(win.__resizeRAF__)
+        win.__resizeRAF__ = requestAnimationFrame(function() {
+          const trigger = win.__resizeTrigger__;
+          const listeners = trigger && trigger.__resizeListeners__;
+          if (trigger && listeners) {
+            listeners.forEach(function(fn) {
+              fn.call(trigger, e);
+            });
           }
-          win.__resizeRAF__ = requestAnimationFrame(function () {
-            var trigger = win.__resizeTrigger__
-            var listeners = trigger && trigger.__resizeListeners__
-            if (listeners) {
-              listeners.forEach(function (fn) {
-                fn.call(trigger, e)
-              })
-            }
-          })
+        });
+      }
+      function objectLoad() {
+        const obj = this;
+        const view = obj.contentDocument.defaultView;
+        view.__resizeTrigger__ = obj.__resizeElement__;
+        view.addEventListener("resize", resizeListener);
+      }
+      function addListener(target, fn) {
+        const win = this || window;
+        const document2 = win.document;
+        const element2 = target;
+        let isIE;
+        const attachEvent = document2.attachEvent;
+        if (typeof navigator !== "undefined") {
+          isIE = /Trident/.test(navigator.userAgent) || /Edge/.test(navigator.userAgent);
         }
-
-        var exports = function exports(element, fn) {
-          var window = this
-          var document = window.document
-          var isIE
-
-          var attachEvent = document.attachEvent
-          if (typeof navigator !== "undefined") {
-            isIE =
-              navigator.userAgent.match(/Trident/) ||
-              navigator.userAgent.match(/Edge/)
-          }
-
-          function objectLoad() {
-            this.contentDocument.defaultView.__resizeTrigger__ =
-              this.__resizeElement__
-            this.contentDocument.defaultView.addEventListener(
-              "resize",
-              resizeListener
-            )
-          }
-
-          if (!element.__resizeListeners__) {
-            element.__resizeListeners__ = []
-            if (attachEvent) {
-              element.__resizeTrigger__ = element
-              element.attachEvent("onresize", resizeListener)
-            } else {
-              if (getComputedStyle(element).position === "static") {
-                element.style.position = "relative"
-              }
-              var obj = (element.__resizeTrigger__ =
-                document.createElement("object"))
-              obj.setAttribute(
-                "style",
-                "position: absolute; top: 0; left: 0; height: 100%; width: 100%; pointer-events: none; z-index: -1; opacity: 0;"
-              )
-              obj.setAttribute("class", "resize-sensor")
-
-              // prevent <object> from stealing keyboard focus
-              obj.setAttribute("tabindex", "-1")
-
-              // prevent screenreaders to see this object
-              obj.setAttribute("title", "")
-
-              obj.__resizeElement__ = element
-              obj.onload = objectLoad
-              obj.type = "text/html"
-              if (isIE) {
-                element.appendChild(obj)
-              }
-              obj.data = "about:blank"
-              if (!isIE) {
-                element.appendChild(obj)
-              }
-            }
-          }
-          element.__resizeListeners__.push(fn)
-        }
-
-        module.exports =
-          typeof window === "undefined" ? exports : exports.bind(window)
-
-        module.exports.unbind = function (element, fn) {
-          var attachEvent = document.attachEvent
-          var listeners = element.__resizeListeners__ || []
-          if (fn) {
-            var index = listeners.indexOf(fn)
-            if (index !== -1) {
-              listeners.splice(index, 1)
-            }
+        if (!element2.__resizeListeners__) {
+          element2.__resizeListeners__ = [];
+          if (attachEvent) {
+            element2.__resizeTrigger__ = element2;
+            element2.attachEvent("onresize", resizeListener);
           } else {
-            listeners = element.__resizeListeners__ = []
-          }
-          if (!listeners.length) {
-            if (attachEvent) {
-              element.detachEvent("onresize", resizeListener)
-            } else if (element.__resizeTrigger__) {
-              var contentDocument = element.__resizeTrigger__.contentDocument
-              var defaultView = contentDocument && contentDocument.defaultView
-              if (defaultView) {
-                defaultView.removeEventListener("resize", resizeListener)
-                delete defaultView.__resizeTrigger__
-              }
-              element.__resizeTrigger__ = !element.removeChild(
-                element.__resizeTrigger__
-              )
+            if (getComputedStyle(element2).position === "static") {
+              element2.style.position = "relative";
             }
-            delete element.__resizeListeners__
+            const obj = document2.createElement("object");
+            element2.__resizeTrigger__ = obj;
+            obj.setAttribute(
+              "style",
+              "position: absolute; top: 0; left: 0; height: 100%; width: 100%; pointer-events: none; z-index: -1; opacity: 0;"
+            );
+            obj.setAttribute("class", "resize-sensor");
+            obj.setAttribute("tabindex", "-1");
+            obj.setAttribute("title", "");
+            obj.__resizeElement__ = element2;
+            obj.onload = objectLoad;
+            obj.type = "text/html";
+            if (isIE) {
+              element2.appendChild(obj);
+            }
+            obj.data = "about:blank";
+            if (!isIE) {
+              element2.appendChild(obj);
+            }
           }
         }
-      },
-      {},
-    ],
-  },
-  {},
-  [1]
-)
+        element2.__resizeListeners__.push(fn);
+      }
+      function removeListener(target, fn) {
+        const element2 = target;
+        const attachEvent = document.attachEvent;
+        let listeners = element2.__resizeListeners__ || [];
+        if (fn) {
+          const index = listeners.indexOf(fn);
+          if (index !== -1) {
+            listeners.splice(index, 1);
+          }
+        } else {
+          listeners = element2.__resizeListeners__ = [];
+        }
+        if (!listeners.length) {
+          if (attachEvent) {
+            element2.detachEvent("onresize", resizeListener);
+          } else if (element2.__resizeTrigger__) {
+            const trigger = element2.__resizeTrigger__;
+            const contentDocument = trigger.contentDocument;
+            const defaultView = contentDocument && contentDocument.defaultView;
+            if (defaultView) {
+              defaultView.removeEventListener("resize", resizeListener);
+              delete defaultView.__resizeTrigger__;
+            }
+            element2.removeChild(trigger);
+            element2.__resizeTrigger__ = false;
+          }
+          delete element2.__resizeListeners__;
+        }
+      }
+      var elementResizeEvent2 = typeof window === "undefined" ? addListener : addListener.bind(window);
+      elementResizeEvent2.unbind = removeListener;
+      module.exports = elementResizeEvent2;
+    }
+  });
+
+  // example/index.ts
+  var import_src = __toESM(require_src());
+  var element = document.getElementById("resize");
+  var label = document.getElementById("width");
+  function onResize() {
+    console.log("resized!", element.offsetWidth);
+    label.innerHTML = element.offsetWidth + "px wide";
+  }
+  import_src.default.unbind(element);
+  import_src.default.unbind(element, onResize);
+  (0, import_src.default)(element, onResize);
+  import_src.default.unbind(element, onResize);
+  (0, import_src.default)(element, onResize);
+  import_src.default.unbind(element, function() {
+  });
+})();
