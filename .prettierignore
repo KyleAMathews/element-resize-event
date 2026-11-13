@@ -1,0 +1,5 @@
+example/bundle.js
+pnpm-lock.yaml
+.isaac
+.vitest
+dist
