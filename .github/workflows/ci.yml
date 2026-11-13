@@ -29,3 +29,16 @@ jobs:
       - run: pnpm check:es5
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test
+
+  # The oracles (test/*.oracle.ts) run under Node against src/index.ts.
+  oracles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:oracles

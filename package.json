@@ -34,6 +34,8 @@
     "prepack": "pnpm build",
     "prepare": "husky",
     "test": "pnpm build && vitest run",
+    "test:oracle-gaps": "oracle-gaps --package . --source src/index.ts --seed 20261112 --config vitest.oracle.config.mts",
+    "test:oracles": "vitest run --config vitest.oracle.config.mts",
     "test:watch": "pnpm build && vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit && pnpm build && tsc -p test/tsconfig.json"
   },
@@ -43,10 +45,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@tanstack/eslint-plugin-oracles": "https://pkg.pr.new/TanStack/oracles/@tanstack/eslint-plugin-oracles@81a9a8c",
+    "@tanstack/oracles": "https://pkg.pr.new/TanStack/oracles/@tanstack/oracles@81a9a8c",
     "@vitest/browser-playwright": "^5.1.0",
     "es-check": "^9.8.1",
     "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
+    "fast-check": "^4.10.2",
     "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",

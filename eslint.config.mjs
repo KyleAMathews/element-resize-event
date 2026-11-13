@@ -1,4 +1,5 @@
 import js from "@eslint/js"
+import oracles from "@tanstack/eslint-plugin-oracles"
 import globals from "globals"
 import { defineConfig } from "eslint/config"
 import tseslint from "typescript-eslint"
@@ -26,5 +27,8 @@ export default defineConfig(
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-require-imports": "off",
     },
-  }
+  },
+  // Oracle files (test/*.oracle.ts) and the probe form in src/**.
+  oracles.configs.recommended,
+  oracles.configs.production
 )

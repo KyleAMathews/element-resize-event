@@ -96,6 +96,41 @@ describe("elementResizeEvent", () => {
   })
 })
 
+describe("elements outside the document", () => {
+  it("calls the listener once the element is added and resizes", async () => {
+    const element = document.createElement("div")
+    element.setAttribute("style", "width: 100px; height: 100px;")
+    const widths: number[] = []
+
+    elementResizeEvent(element, () => widths.push(element.offsetWidth))
+    document.body.appendChild(element)
+    await waitForSensor(element)
+    expect(element.style.position).toBe("relative")
+
+    element.style.width = "250px"
+
+    await expect.poll(() => widths).toContain(250)
+    // Being added may give one call of its own, when the sensor is sized.
+    expect(widths.filter(width => width !== 250).length).toBeLessThanOrEqual(1)
+  })
+
+  it("leaves a stylesheet position alone", async () => {
+    const style = document.createElement("style")
+    style.textContent = ".positioned { position: absolute; }"
+    document.head.appendChild(style)
+    const element = document.createElement("div")
+    element.className = "positioned"
+    element.setAttribute("style", "width: 100px; height: 100px;")
+
+    elementResizeEvent(element, () => {})
+    document.body.appendChild(element)
+    await waitForSensor(element)
+
+    expect(element.style.position).toBe("")
+    style.remove()
+  })
+})
+
 describe("unbind", () => {
   it("removes only the given listener", async () => {
     const element = createElement()
@@ -149,6 +184,41 @@ describe("unbind", () => {
     elementResizeEvent(element, () => {})
     expect(() => elementResizeEvent.unbind(element, () => {})).not.toThrow()
     expect(sensorOf(element)).not.toBeNull()
+  })
+
+  it("still cleans up after other code removed the sensor", async () => {
+    const element = createElement()
+    const listener = vi.fn()
+
+    elementResizeEvent(element, () => {})
+    await waitForSensor(element)
+    element.innerHTML = ""
+
+    expect(() => elementResizeEvent.unbind(element)).not.toThrow()
+    expect(element.style.position).toBe("")
+
+    elementResizeEvent(element, listener)
+    await waitForSensor(element)
+    element.style.width = "160px"
+
+    await expect.poll(() => listener.mock.calls.length).toBeGreaterThan(0)
+  })
+
+  it("restores the position on the last unbind", () => {
+    const element = createElement()
+    const listener = () => {}
+    elementResizeEvent(element, listener)
+    expect(element.style.position).toBe("relative")
+    elementResizeEvent.unbind(element, listener)
+    expect(element.style.position).toBe("")
+  })
+
+  it("keeps a position the caller set while bound", () => {
+    const element = createElement()
+    elementResizeEvent(element, () => {})
+    element.style.position = "absolute"
+    elementResizeEvent.unbind(element)
+    expect(element.style.position).toBe("absolute")
   })
 
   it("can rebind after unbinding", async () => {
